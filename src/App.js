@@ -13,6 +13,10 @@ class BooksApp extends React.Component {
     showSearchPage: true
   }
 
+  ComponentDidMount() {
+    /*Will log out the books api calls returned */
+    BooksAPI.getAll().then((books) => console.log(books));
+  }
   render() {
     return (
       <div className="app">
