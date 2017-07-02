@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import Book from './Book';
 
-class BookShelf extends Component {
+class Read extends Component {
+
     render() {
         return (
             <div className="bookshelf">
@@ -13,24 +14,24 @@ class BookShelf extends Component {
                             style={{width: 128, 
                                     height: 192, 
                                     bookImage: /* Will be pulled in from API */ 'placeholder' }}
-                                    bookTitle="The Hobbit"
-                                    bookAuthor="J.R.R. Tolkien" />
+                                    bookTitle={this.props.bookTitle}
+                                    bookAuthor={this.props.bookAuthor} />
                       </li>
                       <li>
                         <Book
                             style={{width: 128,
                                     height: 174,
                                     bookImage: /* Will be pulled in from API */ 'placeholder' }}
-                                    bookTitle="Oh, the Places You'll Go!"
-                                    bookAuthor="Seuss" />
+                                    bookTitle={this.props.bookTitle}
+                                    bookAuthor={this.props.bookAuthor} />
                       </li>
                       <li>
                         <Book
                             style={{width: 128,
                                     height: 192,
                                     bookImage: /* Will be pulled in from API */ 'placeholder' }}
-                                    bookTitle="The Adventures of Tom Sawyer"
-                                    bookAuthor="Mark Twain" />
+                                    bookTitle={this.props.bookTitle}
+                                    bookAuthor={this.props.bookAuthor} />
                       </li>
                     </ol>
                   </div>
@@ -39,4 +40,4 @@ class BookShelf extends Component {
     }
 }
 
-export default BookShelf;
+export default Read;
