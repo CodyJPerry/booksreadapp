@@ -1,15 +1,6 @@
 import React, { Component } from 'react';
 import Book from './Book';
 
-class BookShelf extends Component  {
-   state = {
-    books: [],
-    currentlyReading: [],
-    wantToRead: [],
-    read: [],
-   }
-
-
   render () {
     return (
       <div className="bookshelf">
