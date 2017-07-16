@@ -21,13 +21,12 @@ class BooksApp extends React.Component {
     });
   }
 
-  updateShelf = () => {
-    // BooksAPI.update(id, shelf).then((book) => {
-    //   //pass book.id and book.shelf based on the bookShelfChanger option
-    // });
-
-    
-     console.log('yes');
+  updateShelf = (id, shelf) => {
+    BooksAPI.update(id, shelf).then((book) => {
+      //pass book.id and book.shelf based on the bookShelfChanger option
+      console.log(book);
+    });
+     
   }
 
 
@@ -57,7 +56,7 @@ class BooksApp extends React.Component {
                         width={128}
                         height={192}
                         bookImage={`url(${book.imageLinks.thumbnail})`}
-                        onUpdate={this.updateShelf}
+                        onUpdate={this.updateShelf(book.id, book.shelf)}
                         
                       />
                   </li>
@@ -76,7 +75,7 @@ class BooksApp extends React.Component {
                         width={128}
                         height={192}
                         bookImage={`url(${book.imageLinks.thumbnail})`}
-                        onUpdate={this.updateShelf}
+                        onUpdate={this.updateShelf(book.id, book.shelf)}
                       />
                   </li>
                   )
@@ -93,7 +92,7 @@ class BooksApp extends React.Component {
                         width={128}
                         height={192}
                         bookImage={`url(${book.imageLinks.thumbnail})`}
-                        onUpdate={this.updateShelf}
+                        onUpdate={this.updateShelf(book.id, book.shelf)}
                       />
                   </li>       
                     )
@@ -150,7 +149,7 @@ class SearchPage extends React.Component {
                   width={128}
                   height={192}
                   bookImage={book && `url(${book.imageLinks.thumbnail})`}
-                  onUpdate={this.onUpdate}
+                  onUpdate={this.props.onUpdate(book.id, book.shelf)}
                 />
             </li>
             )
@@ -197,7 +196,7 @@ const Book = (props) => {
 const BookShelfChanger = (props) => {
     return (
         <div className="book-shelf-changer">
-            <select onChange={props.update}>
+            <select onChange={(event) => console.log(typeof(props.update))}>
                <option value="none" disabled>Move to...</option>
                 <option value="currentlyReading">Currently Reading</option>
                 <option value="wantToRead">Want to Read</option>
