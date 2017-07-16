@@ -11,7 +11,7 @@ class BooksApp extends React.Component {
      */
   state = {
     books: [],
-    showSearchPage: true
+    showSearchPage: false
   }
 
   componentDidMount() {
@@ -25,7 +25,7 @@ class BooksApp extends React.Component {
     return (
       <div className="app">
         {this.state.showSearchPage ? (
-          <SearchPage />
+          <SearchPage  />
         ) : (
           
           <div className="list-books">
@@ -96,21 +96,54 @@ class BooksApp extends React.Component {
 }
 
 
-const SearchPage = (props) => {
+
+class SearchPage extends React.Component {
+  state = {
+    query: '',
+    books: []
+  }
+
+  updateQuery = (query) => {
+    this.setState({ query });
+    BooksAPI.search(query, 20).then((books) => {
+      this.setState({ books });
+    });
+  }
+
+  render() {
+    const { query } = this.state;
+    
   return (
      <div className="search-books">
         <div className="search-books-bar">
           <a className="close-search" onClick={() => this.setState({ showSearchPage: false })}>Close</a>
           <div className="search-books-input-wrapper">
-            <input type="text" placeholder="Search by title or author"/>
+            <input 
+              type="text" 
+              placeholder="Search by title or author"
+              value={this.state.query}
+              onChange={(event) => this.updateQuery(event.target.value)}/>
           </div>
         </div>
         <div className="search-books-results">
         <ol className="books-grid">
+          {this.state.books && this.state.books.map(book => (
+              <li key={book.id}>
+                <Book
+                  bookTitle={book && book.title}
+                  bookAuthor={book.authors && book.authors[0]}
+                  width={128}
+                  height={192}
+                  bookImage={book && `url(${book.imageLinks.thumbnail})`}
+                />
+            </li>
+            )
+          )}
         </ol>
       </div>
   </div>
   )
+  }
 }
 
 
