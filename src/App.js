@@ -21,11 +21,22 @@ class BooksApp extends React.Component {
     });
   }
 
+  updateShelf = () => {
+    // BooksAPI.update(id, shelf).then((book) => {
+    //   //pass book.id and book.shelf based on the bookShelfChanger option
+    // });
+
+    
+     console.log('yes');
+  }
+
+
+
   render() {
     return (
       <div className="app">
         {this.state.showSearchPage ? (
-          <SearchPage  />
+          <SearchPage onUpdate={this.updateShelf}  />
         ) : (
           
           <div className="list-books">
@@ -46,6 +57,8 @@ class BooksApp extends React.Component {
                         width={128}
                         height={192}
                         bookImage={`url(${book.imageLinks.thumbnail})`}
+                        onUpdate={this.updateShelf}
+                        
                       />
                   </li>
                    ) 
@@ -63,6 +76,7 @@ class BooksApp extends React.Component {
                         width={128}
                         height={192}
                         bookImage={`url(${book.imageLinks.thumbnail})`}
+                        onUpdate={this.updateShelf}
                       />
                   </li>
                   )
@@ -79,6 +93,7 @@ class BooksApp extends React.Component {
                         width={128}
                         height={192}
                         bookImage={`url(${book.imageLinks.thumbnail})`}
+                        onUpdate={this.updateShelf}
                       />
                   </li>       
                     )
@@ -135,6 +150,7 @@ class SearchPage extends React.Component {
                   width={128}
                   height={192}
                   bookImage={book && `url(${book.imageLinks.thumbnail})`}
+                  onUpdate={this.onUpdate}
                 />
             </li>
             )
@@ -168,7 +184,7 @@ const Book = (props) => {
            <div className="book">
                 <div className="book-top">
                     <div className="book-cover" style={{ width: props.width, height: props.height, backgroundImage: props.bookImage }}></div>
-                    <BookShelfChanger />
+                    <BookShelfChanger update={props.onUpdate} />
                 </div>
                 <div className="book-title">{props.bookTitle}</div>
                     <div className="book-authors">{props.bookAuthor}</div>
@@ -181,7 +197,7 @@ const Book = (props) => {
 const BookShelfChanger = (props) => {
     return (
         <div className="book-shelf-changer">
-            <select>
+            <select onChange={props.update}>
                <option value="none" disabled>Move to...</option>
                 <option value="currentlyReading">Currently Reading</option>
                 <option value="wantToRead">Want to Read</option>
