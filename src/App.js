@@ -21,15 +21,18 @@ class BooksApp extends React.Component {
     });
   }
 
-  updateShelf = (id, shelf) => {
-    BooksAPI.update(id, shelf).then((book) => {
-      //pass book.id and book.shelf based on the bookShelfChanger option
-      console.log(book);
-      console.log(id);
-      console.log(shelf);
+  updateShelf = (id, currentShelf) => {
+    BooksAPI.update(id, currentShelf).then((books) => {
+      let updateBooks = this.state.books;
+      const updatedBook = this.state.books.filter((book) => book.id === id);
+      //update shelf with currentShelf when id matches
+      updateBooks.find((book) => book.id === id).shelf = currentShelf;
+      //filter updated books needs
+      this.setState({
+        books: updateBooks
+      });
     });
-     
-  }
+  };
 
 
 
@@ -60,7 +63,7 @@ class BooksApp extends React.Component {
                         height={192}
                         bookImage={`url(${book.imageLinks.thumbnail})`}
                         onUpdate={this.updateShelf}
-                        
+                        shelf={book.shelf}
                       />
                   </li>
                    ) 
@@ -80,6 +83,7 @@ class BooksApp extends React.Component {
                         height={192}
                         bookImage={`url(${book.imageLinks.thumbnail})`}
                         onUpdate={this.updateShelf}
+                        shelf={book.shelf}
                       />
                   </li>
                   )
@@ -98,6 +102,7 @@ class BooksApp extends React.Component {
                         height={192}
                         bookImage={`url(${book.imageLinks.thumbnail})`}
                         onUpdate={this.updateShelf}
+                        shelf={book.shelf}
                       />
                   </li>       
                     )
@@ -119,13 +124,35 @@ class BooksApp extends React.Component {
 class SearchPage extends React.Component {
   state = {
     query: '',
-    books: []
+    results: []
   }
 
   updateQuery = (query) => {
     this.setState({ query });
-    BooksAPI.search(query, 20).then((books) => {
-      this.setState({ books });
+  }
+
+  updateSearchPage = (query) => {
+    //`search(query, maxResults)`
+    BooksAPI.search(query, 10).then((books) => {
+      books.map((book) => {
+        return (
+          <ol className="books-grid">
+            {console.log(book)}
+              <li key={book.id}>
+                <Book
+                    id={book.id}
+                    bookTitle={book && book.title}
+                    bookAuthor={book.authors && book.authors[0]}
+                    width={128}
+                    height={192}
+                    bookImage={book && `url(${book.imageLinks.thumbnail})`}
+                    onUpdate={this.props.onUpdate}
+                    shelf={book.shelf}
+                />
+              </li>
+          </ol>
+        );
+      });
     });
   }
 
@@ -145,23 +172,7 @@ class SearchPage extends React.Component {
           </div>
         </div>
         <div className="search-books-results">
-        <ol className="books-grid">
-          {this.state.books && this.state.books.map(book => (
-              <li key={book.id}>
-              {console.log(book.id)}
-                <Book
-                  id={book.id}
-                  bookTitle={book && book.title}
-                  bookAuthor={book.authors && book.authors[0]}
-                  width={128}
-                  height={192}
-                  bookImage={book && `url(${book.imageLinks.thumbnail})`}
-                  onUpdate={this.props.onUpdate}
-                />
-            </li>
-            )
-          )}
-        </ol>
+          {this.state.query &&  updateSearchPage(event.target.value)}
       </div>
   </div>
   )
@@ -190,7 +201,7 @@ const Book = (props) => {
            <div className="book">
                 <div className="book-top">
                     <div className="book-cover" style={{ width: props.width, height: props.height, backgroundImage: props.bookImage }}></div>
-                    <BookShelfChanger id={props.id} update={props.onUpdate} />
+                    <BookShelfChanger shelf={props.shelf} id={props.id} update={props.onUpdate} />
                 </div>
                 <div className="book-title">{props.bookTitle}</div>
                     <div className="book-authors">{props.bookAuthor}</div>
@@ -203,7 +214,7 @@ const Book = (props) => {
 const BookShelfChanger = (props) => {
     return (
         <div className="book-shelf-changer">
-            <select onChange={(event) => props.update(props.id, event.target.value)}>
+            <select onChange={(event) => props.update(props.id, event.target.value)} defaultValue={props.shelf}>
                <option value="none" disabled>Move to...</option>
                 <option value="currentlyReading">Currently Reading</option>
                 <option value="wantToRead">Want to Read</option>
